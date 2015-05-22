@@ -1,0 +1,209 @@
+<!doctype html>
+<html ng-app="tmAPP">
+  <head>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script> -->
+	<script src="static/angular.min.js"></script>
+    <script src="static/main.js"></script>
+    <!-- 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">  		
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css"> 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>  				
+	<style src="static/sty.css"></style>
+	-->
+  </head>
+  <body ng-controller="tmCtrl">
+    <div class="container">
+		
+		<!--start of add block-->	
+		
+		<div class="well well-sm"><!--Qos Region-->
+			<hr>
+			<h2>Qos Setting</h2>
+			<hr>
+			<div class="form-horizontal ">
+				<div class="form-group"><label class="control-label col-sm-2">dpid:		</label><div class="col-sm-5"><input type="text" class="form-control" ng-model="Qosdpid">		</div> </div>
+				<div class="form-group"><label class="control-label col-sm-2">nw_dst:	</label><div class="col-sm-5"><input type="text" class="form-control" ng-model="QosNwDst">		</div> </div>
+				<div class="form-group"><label class="control-label col-sm-2">tp_dst:	</label><div class="col-sm-5"><input type="text" class="form-control" ng-model="QosTpDst">		</div> </div>
+				<div class="form-group"><label class="control-label col-sm-2">port-name:</label><div class="col-sm-5"><input type="text" class="form-control" ng-model="QosPortName">	</div> </div>
+				<div class="form-group"><label class="control-label col-sm-2">speed set </label></div> 
+				<div class="form-group">
+					<label class="control-label col-sm-2">max_rate: </label>
+					<div class="col-sm-10">
+						<label class="radio-inline" ng-repeat="option in QosMaxRateOptions">
+							<input type="radio" ng-model="$parent.QosMaxRateSelected" ng-value="option"/>{{ '{{' }}option{{'}}'}}
+						</label>	
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-2">min_rate:</label>
+					<div class="col-sm-10">
+						<label class="radio-inline" ng-repeat="option in QosMinRateOptions">
+							<input type="radio" ng-model="$parent.QosMinRateSelected" ng-value="option"/>{{ '{{' }}option{{'}}'}}
+						</label>			
+					</div>	
+				</div>		
+				<div class="form-group"><label class="control-label col-sm-2">queue:	 </label><div class="col-sm-5"><input type="text" class="form-control" ng-model="QosQueue">	</div>	</div>
+				<div class="form-group"><label class="control-label col-sm-2">Del_qos_id:</label><div class="col-sm-5"><input type="text" class="form-control" ng-model="QosId">	</div>	</div>
+			</div>	
+			<div class="col-sm-offset-1">
+				<div class="btn-group">	
+					<a  ng-repeat="func in QosSetFuncs" >
+						<button class="btn btn-info btn-md" ng-click="QostriggerMethod(func.method)">{{ '{{' }}func.name{{'}}'}}</button>
+					</a>
+					<a  ng-repeat="func in QosGetFuncs" ng-href="http://140.118.20.158:90/{{ '{{' }}func.herf{{'}}'}}"  target="datapage">
+						<button class="btn btn-info btn-md" ng-click="QostriggerMethod(func.method)">{{ '{{' }}func.name{{'}}'}}</button>
+					</a>
+					<a  ng-repeat="func in QosDelFuncs">
+						<button class="btn btn-info btn-md" ng-click="QostriggerMethod(func.method)">{{ '{{' }}func.name{{'}}'}}</button>
+					</a>						
+				</div>
+			</div>	
+		</div>
+
+		<div class="well well-sm">
+			<hr>
+				<h2>firewall setting</h2>
+			<hr>
+			<div class="form-horizontal">
+				<div class="form-group "><label class="control-label col-sm-2">dpid:</label><div class="col-sm-5"><input type="text" class="form-control " ng-model="Firewalldpid"></div></div>
+				<div class="form-group">
+					<label class="control-label col-sm-2">enable:</label>
+					<div class="col-sm-10">
+						<label class="radio-inline col-sm-1" ng-repeat="en in FirewallEnableList">
+								<input type="radio" ng-model="$parent.FirewallEnableSelected" ng-value="en"/>{{ '{{' }}en{{'}}'}}
+						</label>
+					</div>	
+				</div>
+				<div class="form-group"><label class="control-label col-sm-2">nw_src:</label> <div class="col-sm-5"><input type="text" class="form-control" ng-model="FirewallNwSrc"></div></div>
+				<div class="form-group"><label class="control-label col-sm-2">nw_dst:</label> <div class="col-sm-5"><input type="text" class="form-control" ng-model="FirewallNwDst"></div></div>		
+				<div class="form-group">
+					<label class="control-label col-sm-2">protocol:</label>
+					<div class="col-sm-10">
+						<label class="checkbox-inline col-sm-1" ng-repeat="protocol in FirewallProtocolList">
+							<input type="checkbox" ng-model="protocol.model">{{ '{{' }} protocol.id{{ '}}' }}
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-2">Action:</label>
+					<div class="col-sm-10">
+						<label class="checkbox-inline col-sm-1" ng-repeat="action in FirewallActionList">
+							<input type="checkbox"  class="normal" ng-model="action.model">	{{ '{{' }} action.id{{ '}}' }}
+						</label>
+					</div>	
+				</div>
+				<div class="form-group"><label class="control-label col-sm-2">priority:			</label> <div class="col-sm-5"> <input type="text" class="form-control" ng-model="FirewallPriority">	</div></div>
+				<div class="form-group"><label class="control-label col-sm-2">Del_firewall_id:	</label> <div class="col-sm-5"> <input type="text" class="form-control" ng-model="FirewallId">			</div></div>
+			</div>
+			<div class="col-sm-offset-1">
+				<div class="btn-group">
+					<a  ng-repeat="func in FirewallSetFuncs">
+						<button class="btn btn-info btn-md" ng-click="FirewalltriggerMethod(func.method)">{{ '{{' }}func.name{{'}}'}}</button>
+					</a>
+					<a  ng-repeat="func in FirewallGetFuncs" ng-href="http://140.118.20.158:90/{{ '{{' }}func.herf{{'}}'}}"  target="datapage">
+						<button class="btn btn-info btn-md" ng-click="FirewalltriggerMethod(func.method)">{{ '{{' }}func.name{{'}}'}}</button>
+					</a>	
+					<a  ng-repeat="func in FirewallDelFuncs">
+						<button class="btn btn-info btn-md" ng-click="FirewalltriggerMethod(func.method)">{{ '{{' }}func.name{{'}}'}}</button>
+					</a>			
+				</div>	
+			</div>	
+			<hr>
+		</div>			
+		
+		<!--
+		<div class="well well-sm">
+			<hr>
+				<h2>Monitor</h2>
+			<hr>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>port	</th>
+						<th>rx_bytes</th>
+						<th>rx_pkts	</th>
+						<th>rx_error</th>
+						<th>tx_bytes</th>
+						<th>tx_pkts	</th>
+						<th>tx_error</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="x in somedata.last">
+						<td>{{ '{{' }}x.port	{{'}}'}}</td>
+						<td>{{ '{{' }}x.rx_bytes{{'}}'}}</td>
+						<td>{{ '{{' }}x.rx_pkts	{{'}}'}}</td>
+						<td>{{ '{{' }}x.rx_error{{'}}'}}</td>
+						<td>{{ '{{' }}x.tx_bytes{{'}}'}}</td>
+						<td>{{ '{{' }}x.tx_pkts	{{'}}'}}</td>
+						<td>{{ '{{' }}x.tx_error{{'}}'}}</td>
+					</tr>		
+				</tbody>	
+			</table>
+			</br>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>in_port	</th>
+						<th>eth_dst	</th>
+						<th>out_port</th>
+						<th>packets	</th>
+						<th>bytes	</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="x in somedata.first">
+						<td>{{ '{{' }}x.in_port	{{'}}'}}</td>
+						<td>{{ '{{' }}x.eth_dst	{{'}}'}}</td>
+						<td>{{ '{{' }}x.out_port{{'}}'}}</td>
+						<td>{{ '{{' }}x.packets	{{'}}'}}</td>
+						<td>{{ '{{' }}x.bytes	{{'}}'}}</td>
+					</tr>	
+				</tbody>
+			</table>	
+			</br>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>tcp_src	</th>
+						<th>in_port	</th>
+						<th>eth_dst	</th>
+						<th>out_port</th>
+						<th>packets	</th>
+						<th>bytes	</th>
+					</tr>
+				</thead>	
+				<tbody>
+					<tr ng-repeat="x in somedata.middle">
+						<td>{{ '{{' }}x.tcp_src	{{'}}'}}</td>
+						<td>{{ '{{' }}x.in_port	{{'}}'}}</td>
+						<td>{{ '{{' }}x.eth_dst	{{'}}'}}</td>
+						<td>{{ '{{' }}x.out_port{{'}}'}}</td>
+						<td>{{ '{{' }}x.packets	{{'}}'}}</td>
+						<td>{{ '{{' }}x.bytes	{{'}}'}}</td>
+					</tr>	
+				</tbody>	
+			</table>	
+		</div>		
+		-->
+		
+		<div class="well well-sm"><!--Post text-->
+			<hr>
+			<h3>post test</h3>
+			<hr>
+			<button class="btn btn-info btn-md" ng-click="PostData()">POST</button>
+		</div>
+		
+		<div class="well well-sm"><!--Temporary Region-->
+			<hr>
+				<h3>temporary command setting area</h3>
+			<hr>
+			<div>
+				<input type="text" placeholder="Add something" name="posttext" ng-model="newItem" />
+				<button class="btn btn-info" ng-click="SetCommand()" > set command</button>
+			</div>
+		</div>	
+		<!--end of add block-->		
+    </div>
+  </body>
+</html>
